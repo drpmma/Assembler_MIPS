@@ -6,13 +6,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     cpath("")
 {
-    ui->setupUi(this);
-    setWindowTitle("Assembler");
-    highlighter = new Highlighter(ui->textEdit->document());
-    QPalette palette;
-    palette.setColor(QPalette::Background, QColor(255,255,255));
-    this->setPalette(palette);
+    setEditor();
     setFileMenu();
+    setBuildMenu();
     setHelpMenu();
 }
 
@@ -138,6 +134,18 @@ void MainWindow::on_actionNew_triggered()
         ui->textEdit->clear();
 }
 
+void MainWindow::setEditor()
+{
+    ui->setupUi(this);
+    setWindowTitle("Assembler");
+
+    highlighter = new Highlighter(ui->textEdit->document());
+
+    QPalette palette;
+    palette.setColor(QPalette::Background, QColor(255,255,255));
+    this->setPalette(palette);
+}
+
 void MainWindow::setFileMenu()
 {
     ui->actionNew->setShortcut(QKeySequence::New);
@@ -152,20 +160,58 @@ void MainWindow::setFileMenu()
     ui->actionSave_as->setStatusTip(tr("另存为"));
 }
 
+void MainWindow::setBuildMenu()
+{
+    QMenu *buildMenu = new QMenu(tr("Build"), this);
+
+    ui->menuBar->addMenu(buildMenu);
+    ui->menuBar->setFont(setFont());
+
+    buildMenu->setFont(setFont());
+    buildMenu->addAction(tr("Assemble (Binary file)"), this, SLOT(), tr("F5"));
+    buildMenu->addAction(tr("Assemble (COE file)"), this, SLOT(), tr("F6"));
+    buildMenu->addAction(tr("Disassemble"), this, SLOT(), tr("F10"));
+}
+
 void MainWindow::setHelpMenu()
 {
     QMenu *helpMenu = new QMenu(tr("&Help"), this);
     ui->menuBar->addMenu(helpMenu);
+    ui->menuBar->setFont(setFont());
 
+    helpMenu->setFont(setFont());
     helpMenu->addAction(tr("&About"), this, SLOT(about()));
     helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
 }
 
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("About Syntax Highlighter"),
-                tr("<p>The <b>Syntax Highlighter</b> example shows how " \
-                   "to perform simple syntax highlighting by subclassing " \
-                   "the QSyntaxHighlighter class and describing " \
-                   "highlighting rules using regular expressions.</p>"));
+    QMessageBox::about(this, tr("About Assembler"),
+                tr("<p> <p><b>Assembler</b></p> " \
+                   "copy right <a href='https://github.com/drpmma/Assembler_MIPS'>@drpmma</a> github" \
+                   "</p>"));
+}
+
+QFont MainWindow::setFont()
+{
+    QFont font;
+    font.setFamily("Microsoft JhengHei Light");
+    font.setFixedPitch(true);
+    font.setPointSize(10);
+    return font;
+}
+
+void MainWindow::assemble_b()
+{
+
+}
+
+void MainWindow::assemble_c()
+{
+
+}
+
+void MainWindow::disassemble()
+{
+
 }

@@ -7,6 +7,7 @@
 #include <QTextEdit>
 #include <QTextStream>
 #include <QCloseEvent>
+#include "highlighter.h"
 
 
 namespace Ui {
@@ -23,6 +24,8 @@ public:
 
 
 private slots:
+    void about();
+
     void on_actionExit_triggered();
 
     void on_actionOpen_triggered();
@@ -33,9 +36,14 @@ private slots:
 
     void on_textEdit_textChanged();
 
+    void on_actionNew_triggered();
+
 private:
     Ui::MainWindow *ui;
     QString cpath;
+    Highlighter *highlighter;
+    void setFileMenu();
+    void setHelpMenu();
     void closeEvent(QCloseEvent *event);
     void save_file();
 };

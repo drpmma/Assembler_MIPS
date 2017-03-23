@@ -8,17 +8,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Assembler");
+    highlighter = new Highlighter(ui->textEdit->document());
     QPalette palette;
     palette.setColor(QPalette::Background, QColor(255,255,255));
     this->setPalette(palette);
-    ui->actionOpen->setShortcut(tr("Ctrl+O"));
-    ui->actionOpen->setStatusTip(tr("打开一个文件"));
-    ui->actionExit->setShortcut(tr("Ctrl+W"));
-    ui->actionExit->setStatusTip(tr("关闭程序"));
-    ui->actionSave->setShortcut(tr("Ctrl+S"));
-    ui->actionSave->setStatusTip((tr("保存")));
-    ui->actionSave_as->setShortcut(tr("Ctrl+Shift+S"));
-    ui->actionSave_as->setStatusTip(tr("另存为"));
+    setFileMenu();
+    setHelpMenu();
 }
 
 MainWindow::~MainWindow()
@@ -61,7 +56,7 @@ void MainWindow::save_file()
            return;
         }
         QTextStream out(&file);
-        out<<ui->textEdit->toPlainText();
+        out << ui->textEdit->toPlainText();
         file.close();
     }
     setWindowTitle("Assembler");
@@ -69,7 +64,7 @@ void MainWindow::save_file()
 
 void MainWindow::on_actionExit_triggered()
 {
-     QApplication::exit( 0 );
+     this->close();
 }
 
 void MainWindow::on_actionOpen_triggered()
@@ -102,7 +97,7 @@ void MainWindow::on_actionSave_triggered()
            return;
         }
         QTextStream out(&cfile);
-        out<<ui->textEdit->toPlainText();
+        out << ui->textEdit->toPlainText();
         cfile.close();
         setWindowTitle("Assembler");
     }
@@ -120,4 +115,57 @@ void MainWindow::on_actionSave_as_triggered()
 void MainWindow::on_textEdit_textChanged()
 {
     setWindowTitle("Assembler *");
+}
+
+void MainWindow::on_actionNew_triggered()
+{
+    if(windowTitle() == "Assembler *")
+    {
+        switch( QMessageBox::information(this,tr("提示"),tr("是否保存更改?"),tr("保存"), tr("不保存"), tr("取消"), 0, 1))
+        {
+        case 0:
+            save_file();
+            ui->textEdit->clear();
+            break;
+        case 1:
+            ui->textEdit->clear();
+            break;
+        default:
+            break;
+        }
+    }
+    else
+        ui->textEdit->clear();
+}
+
+void MainWindow::setFileMenu()
+{
+    ui->actionNew->setShortcut(QKeySequence::New);
+    ui->actionNew->setStatusTip(tr("新建一个文件"));
+    ui->actionOpen->setShortcut(QKeySequence::Open);
+    ui->actionOpen->setStatusTip(tr("打开一个文件"));
+    ui->actionExit->setShortcut(QKeySequence::Quit);
+    ui->actionExit->setStatusTip(tr("关闭程序"));
+    ui->actionSave->setShortcut(QKeySequence::Save);
+    ui->actionSave->setStatusTip((tr("保存")));
+    ui->actionSave_as->setShortcut(QKeySequence::SaveAs);
+    ui->actionSave_as->setStatusTip(tr("另存为"));
+}
+
+void MainWindow::setHelpMenu()
+{
+    QMenu *helpMenu = new QMenu(tr("&Help"), this);
+    ui->menuBar->addMenu(helpMenu);
+
+    helpMenu->addAction(tr("&About"), this, SLOT(about()));
+    helpMenu->addAction(tr("About &Qt"), qApp, SLOT(aboutQt()));
+}
+
+void MainWindow::about()
+{
+    QMessageBox::about(this, tr("About Syntax Highlighter"),
+                tr("<p>The <b>Syntax Highlighter</b> example shows how " \
+                   "to perform simple syntax highlighting by subclassing " \
+                   "the QSyntaxHighlighter class and describing " \
+                   "highlighting rules using regular expressions.</p>"));
 }

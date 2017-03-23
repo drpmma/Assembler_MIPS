@@ -26,16 +26,38 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::closeEvent(QCloseEvent *event)
+{
+    if(windowTitle() == "Assembler *")
+    {
+        switch( QMessageBox::information(this,tr("提示"),tr("是否保存更改?"),tr("保存"), tr("不保存"), tr("取消"), 0, 1))
+        {
+        case 0:
+            save_file();
+            event->accept();
+            break;
+        case 1:
+            event->accept();
+            break;
+        default:
+            event->ignore();
+            break;
+        }
+    }
+    else
+        event->accept();
+}
 
 void MainWindow::save_file()
 {
     QString path = QFileDialog::getSaveFileName(this,tr("Save File"),".",tr("Assembler Source(*.ASM);;COE File(*.coe);;BIN File(*.bin)"));
     QFile file(path);
+    cpath = path;
     if(!path.isEmpty())
     {
         if(!file.open(QIODevice::WriteOnly|QIODevice::Text))//已只写方式和文本方式打开这个文件
         {
-           QMessageBox::warning(this,tr("Save As File"),tr("can't save file"));
+           QMessageBox::warning(this,tr("Save File"),tr("can't save file"));
            return;
         }
         QTextStream out(&file);
@@ -76,7 +98,7 @@ void MainWindow::on_actionSave_triggered()
         QFile cfile(cpath);
         if(!cfile.open(QIODevice::WriteOnly|QIODevice::Text))//已只写方式和文本方式打开这个文件
         {
-           QMessageBox::warning(this,tr("Save As File"),tr("can't save file"));
+           QMessageBox::warning(this,tr("Save File"),tr("can't save file"));
            return;
         }
         QTextStream out(&cfile);
@@ -89,8 +111,6 @@ void MainWindow::on_actionSave_triggered()
         save_file();
     }
 }
-
-
 
 void MainWindow::on_actionSave_as_triggered()
 {

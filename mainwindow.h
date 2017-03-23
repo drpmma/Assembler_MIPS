@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QTextEdit>
 #include <QTextStream>
+#include <QCloseEvent>
 
 
 namespace Ui {
@@ -35,6 +36,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     QString cpath;
+    void closeEvent(QCloseEvent *event);
     void save_file();
 };
 

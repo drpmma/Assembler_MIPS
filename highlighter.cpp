@@ -8,31 +8,42 @@ Highlighter::Highlighter(QTextDocument *parent)
     keywordFormat.setForeground(Qt::darkBlue);
     keywordFormat.setFontWeight(QFont::Bold);
     QStringList keywordPatterns;
-    keywordPatterns << "\\bchar\\b" << "\\bclass\\b" << "\\bconst\\b"
-                    << "\\bdouble\\b" << "\\benum\\b" << "\\bexplicit\\b"
-                    << "\\bfriend\\b" << "\\binline\\b" << "\\bint\\b"
-                    << "\\blong\\b" << "\\bnamespace\\b" << "\\boperator\\b"
-                    << "\\bprivate\\b" << "\\bprotected\\b" << "\\bpublic\\b"
-                    << "\\bshort\\b" << "\\bsignals\\b" << "\\bsigned\\b"
-                    << "\\bslots\\b" << "\\bstatic\\b" << "\\bstruct\\b"
-                    << "\\btemplate\\b" << "\\btypedef\\b" << "\\btypename\\b"
-                    << "\\bunion\\b" << "\\bunsigned\\b" << "\\bvirtual\\b"
-                    << "\\bvoid\\b" << "\\bvolatile\\b";
+    keywordPatterns << "\\blw\\b" << "\\blb\\b" << "\\blbu\\b" << "\\blh\\b" << "\\blhu\\b"
+                    << "\\bsw\\b" << "\\bsb\\b" << "\\bsh\\b"
+                    << "\\badd\\b" << "\\baddu\\b" << "\\bsub\\b" << "\\bsubu\\b"
+                    << "\\bslt\\b" << "\\bsltu\\b"
+                    << "\\band\\b" << "\\bor\\b" << "\\bxor\\b" << "\\bnor\\b"
+                    << "\\bsll\\b" << "\\bsrl\\b" << "\\bsra\\b"
+                    << "\\baddi\\b" << "\\baddiu\\b" << "\\bandi\\b" << "\\bori\\b" << "\\bxori\\b"
+                    << "\\blui\\b" << "\\bslti\\b" << "\\bsltiu\\b"
+                    << "\\bbeq\\b" << "\\bbne\\b" << "\\bblez\\b" << "\\bbgtz\\b" << "\\bbltz\\b" << "\\bbgez\\b"
+                    << "\\bj\\b" << "\\bjal\\b" << "\\bjalr\\b" << "\\bjr\\b";
     foreach (const QString &pattern, keywordPatterns) {
         rule.pattern = QRegExp(pattern);
         rule.format = keywordFormat;
         highlightingRules.append(rule);
     }
 
-    classFormat.setFontWeight(QFont::Bold);
-    classFormat.setForeground(Qt::darkMagenta);
-    rule.pattern = QRegExp("\\bQ[A-Za-z]+\\b");
-    rule.format = classFormat;
+    registerFormat.setFontWeight(QFont::Bold);
+    registerFormat.setForeground(Qt::darkMagenta);
+    QStringList registerPatterns;
+    registerPatterns << "\\$[t][0-8]" << "\\$[s][0-7]" << "\\$[a][0-3]" << "\\$[v][0-1]"
+                     << "\\$zero" << "\\$gp" << "\\$sp" << "\\$fp" << "\\$ra" << "\\$[1-2]?[0-9]|30|31";
+    foreach (const QString &pattern, registerPatterns) {
+        rule.pattern = QRegExp(pattern);
+        rule.format = registerFormat;
+        highlightingRules.append(rule);
+    }
+
+    singleLineCommentFormat_sharp.setForeground(Qt::darkGreen);
+    rule.pattern = QRegExp("//[^\n]*");
+    rule.format = singleLineCommentFormat_sharp;
     highlightingRules.append(rule);
 
-    singleLineCommentFormat.setForeground(Qt::red);
-    rule.pattern = QRegExp("//[^\n]*");
-    rule.format = singleLineCommentFormat;
+
+    singleLineCommentFormat_slash.setForeground(Qt::darkGreen);
+    rule.pattern = QRegExp("#[^\n]*");
+    rule.format = singleLineCommentFormat_slash;
     highlightingRules.append(rule);
 
     multiLineCommentFormat.setForeground(Qt::red);
@@ -43,8 +54,9 @@ Highlighter::Highlighter(QTextDocument *parent)
     highlightingRules.append(rule);
 
     functionFormat.setFontItalic(true);
-    functionFormat.setForeground(Qt::blue);
-    rule.pattern = QRegExp("\\b[A-Za-z0-9_]+(?=\\()");
+    functionFormat.setFontWeight(QFont::Bold);
+    functionFormat.setForeground(Qt::darkBlue);
+    rule.pattern = QRegExp("\\b[A-Za-z0-9_]+:");
     rule.format = functionFormat;
     highlightingRules.append(rule);
 

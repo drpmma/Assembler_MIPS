@@ -137,13 +137,14 @@ void MainWindow::on_actionNew_triggered()
 void MainWindow::setEditor()
 {
     ui->setupUi(this);
-    setWindowTitle("Assembler");
+
 
     highlighter = new Highlighter(ui->textEdit->document());
 
     QPalette palette;
     palette.setColor(QPalette::Background, QColor(255,255,255));
     this->setPalette(palette);
+    setWindowTitle("Assembler");
 }
 
 void MainWindow::setFileMenu()
@@ -168,9 +169,9 @@ void MainWindow::setBuildMenu()
     ui->menuBar->setFont(setFont());
 
     buildMenu->setFont(setFont());
-    buildMenu->addAction(tr("Assemble (Binary file)"), this, SLOT(), tr("F5"));
-    buildMenu->addAction(tr("Assemble (COE file)"), this, SLOT(), tr("F6"));
-    buildMenu->addAction(tr("Disassemble"), this, SLOT(), tr("F10"));
+    buildMenu->addAction(tr("Assemble (Binary file)"), this, SLOT(assemble_b()), tr("F5"));
+    buildMenu->addAction(tr("Assemble (COE file)"), this, SLOT(assemble_c()), tr("F6"));
+    buildMenu->addAction(tr("Disassemble"), this, SLOT(disassemble()), tr("F10"));
 }
 
 void MainWindow::setHelpMenu()

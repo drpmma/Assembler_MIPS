@@ -207,6 +207,7 @@ void MainWindow::assemble_b()
 {
     Assemble a_bin;
     a_bin.Read(ui->textEdit->toPlainText());
+    a_bin.inst_handle();
 }
 
 void MainWindow::assemble_c()

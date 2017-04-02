@@ -10,11 +10,13 @@ MainWindow::MainWindow(QWidget *parent) :
     setFileMenu();
     setBuildMenu();
     setHelpMenu();
+    setWindowTitle("Assembler");
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+    delete highlighter;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -144,7 +146,6 @@ void MainWindow::setEditor()
     QPalette palette;
     palette.setColor(QPalette::Background, QColor(255,255,255));
     this->setPalette(palette);
-    setWindowTitle("Assembler");
 }
 
 void MainWindow::setFileMenu()
@@ -188,8 +189,8 @@ void MainWindow::setHelpMenu()
 void MainWindow::about()
 {
     QMessageBox::about(this, tr("About Assembler"),
-                tr("<p> <p><b>Assembler</b></p> " \
-                   "copy right <a href='https://github.com/drpmma/Assembler_MIPS'>@drpmma</a> github" \
+                tr("<p> <p><b><font size = '6' face = 'Microsoft JhengHei Light'>Assembler</b></p> " \
+                   "<font size = '4' face = 'Microsoft JhengHei Light'>copy right <a href='https://github.com/drpmma/Assembler_MIPS'>@drpmma</a> github" \
                    "</p>"));
 }
 

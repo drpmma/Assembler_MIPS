@@ -28,7 +28,7 @@ Highlighter::Highlighter(QTextDocument *parent)
     registerFormat.setForeground(Qt::darkMagenta);
     QStringList registerPatterns;
     registerPatterns << "\\$[t][0-8]" << "\\$[s][0-7]" << "\\$[a][0-3]" << "\\$[v][0-1]"
-                     << "\\$zero" << "\\$gp" << "\\$sp" << "\\$fp" << "\\$ra" << "\\$[1-2]?[0-9]|30|31";
+                     << "\\$zero" << "\\$gp" << "\\$sp" << "\\$fp" << "\\$ra" << "r[1-2]?[0-9]|30|31";
     foreach (const QString &pattern, registerPatterns) {
         rule.pattern = QRegExp(pattern);
         rule.format = registerFormat;
@@ -55,7 +55,7 @@ Highlighter::Highlighter(QTextDocument *parent)
 
     functionFormat.setFontItalic(true);
     functionFormat.setFontWeight(QFont::Bold);
-    functionFormat.setForeground(Qt::darkBlue);
+    functionFormat.setForeground(Qt::darkCyan);
     rule.pattern = QRegExp("\\b[A-Za-z0-9_]+:");
     rule.format = functionFormat;
     highlightingRules.append(rule);

@@ -14,10 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    highlighter.cpp
+    highlighter.cpp \
+    assemble.cpp
 
 HEADERS  += \
     mainwindow.h \
-    highlighter.h
+    highlighter.h \
+    assemble.h
 
 FORMS    += mainwindow.ui

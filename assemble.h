@@ -42,7 +42,9 @@ private:
         SRL,
         SRA,
         SLT,
-        SLTU
+        SLTU,
+        JR,
+        JALR
     };
     void Rtype_inst(const QStringList &inst);
     void complete_inst(QString &inst, const int &num, int func_num, int base);

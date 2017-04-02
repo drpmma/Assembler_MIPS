@@ -7,7 +7,7 @@ Assemble::Assemble():code("")
                     "s0,s1,s2,s3,s4,s5,s6,s7,"\
                     "t8,t9, , ,gp,sp,fp,ra");
     Reglist = a.split(",");
-    QString b = QString("add,addu,sub,subu,and,or,xor,nor,sll,srl,sra,slt,sltu");
+    QString b = QString("add,addu,sub,subu,and,or,xor,nor,sll,srl,sra,slt,sltu,jr,jalr");
     Rtypelist = b.split(",");
 }
 
@@ -50,14 +50,17 @@ void Assemble::Rtype_inst(const QStringList &inst)
 {
     QString bi_inst = "";
     QString opcode = "000000";
-    QString rd = "", rs = "", rt = "";
+    QString rd = "00000", rs = "00000", rt = "00000";
     QString shamt = "00000";
     QString func = "";
     int func_base = 32;
     for(int i = 1; i < 4; ++i)
     {
-        if(i == 3 && QRegExp("[1-2]?[0-9]|[30]|[31]").indexIn(inst[i]) != -1
-           && inst[i][0] != '$' && inst[i][0] != 'r')
+        if(i == 3 && inst[0] == "jalr")
+            break;
+        if(i == 2 && inst[0] == "jr")
+            break;
+        if(i == 3 && inst[i][0] != '$' && inst[i][0] != 'r')
         {
             complete_inst(shamt, 5, inst[i].toInt(), 2);
             complete_inst(rs, 5, 0, 2);
@@ -81,11 +84,16 @@ void Assemble::Rtype_inst(const QStringList &inst)
                 {
                     {
                         case 1:
+                        if(inst[0] == "jalr" || inst[0] == "jr")
+                            complete_inst(rs, 5, reg, 2);
+                        else
                             complete_inst(rd, 5, reg, 2);
                             break;
                         case 2:
                         if(inst[0] != "sll" && inst[0] != "srl" && inst[0] != "sra")
                             complete_inst(rs, 5, reg, 2);
+                        else if(inst[0] == "jr")
+                            complete_inst(rd, 5, reg, 2);
                         else
                             complete_inst(rt, 5, reg, 2);
                             break;
@@ -148,6 +156,12 @@ void Assemble::Rtype_inst(const QStringList &inst)
         break;
     case SLTU:
         complete_inst(func, 6, 43, 2);
+        break;
+    case JR:
+        complete_inst(func, 6, 8, 2);
+        break;
+    case JALR:
+        complete_inst(func, 6, 9, 2);
         break;
     default:
         break;

@@ -8,6 +8,7 @@
 #include <QTextStream>
 #include <QCloseEvent>
 #include "highlighter.h"
+#include "assemble.h"
 
 
 namespace Ui {

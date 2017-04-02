@@ -205,7 +205,8 @@ QFont MainWindow::setFont()
 
 void MainWindow::assemble_b()
 {
-
+    Assemble a_bin;
+    a_bin.Read(ui->textEdit->toPlainText());
 }
 
 void MainWindow::assemble_c()

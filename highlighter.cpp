@@ -28,7 +28,7 @@ Highlighter::Highlighter(QTextDocument *parent)
     registerFormat.setForeground(Qt::darkMagenta);
     QStringList registerPatterns;
     registerPatterns << "\\$[t][0-8]" << "\\$[s][0-7]" << "\\$[a][0-3]" << "\\$[v][0-1]"
-                     << "\\$zero" << "\\$gp" << "\\$sp" << "\\$fp" << "\\$ra" << "r[1-2]?[0-9]|30|31";
+                     << "\\$zero" << "\\$gp" << "\\$sp" << "\\$fp" << "\\$ra" << "r[1-2]?[0-9]|r30|r31";
     foreach (const QString &pattern, registerPatterns) {
         rule.pattern = QRegExp(pattern);
         rule.format = registerFormat;

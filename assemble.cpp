@@ -56,7 +56,8 @@ void Assemble::Rtype_inst(const QStringList &inst)
     int func_base = 32;
     for(int i = 1; i < 4; ++i)
     {
-        if(i == 3 && QRegExp("[1-2]?[0-9]|[30]|[31]").indexIn(inst[i]) != -1)
+        if(i == 3 && QRegExp("[1-2]?[0-9]|[30]|[31]").indexIn(inst[i]) != -1
+           && inst[i][0] != '$' && inst[i][0] != 'r')
         {
             complete_inst(shamt, 5, inst[i].toInt(), 2);
             complete_inst(rs, 5, 0, 2);

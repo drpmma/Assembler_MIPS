@@ -6,10 +6,7 @@
 #include <QMap>
 #include <QDebug>
 
-QStringList Reglist;
-QStringList Rtypelist;
-QStringList Itypelist;
-QStringList Jtypelist;
+
 
 class Assemble
 {
@@ -18,6 +15,10 @@ public:
     void Read(const QString &content);
     void inst_handle();
 private:
+    QStringList Reglist;
+    QStringList Rtypelist;
+    QStringList Itypelist;
+    QStringList Jtypelist;
     QStringList code;
     QMap <QString, int> map;
     enum Register

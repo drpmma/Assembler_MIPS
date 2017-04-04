@@ -41,12 +41,13 @@ void Assemble::inst_handle()
     for(auto i = code.begin(); i != code.end(); ++i)
     {
         QStringList line_split = i->split(QRegExp("\\s+|\\s*[,]\\s*|\\s*[;]"));
+        qDebug() << line_split;
         if(Rtypelist.contains(line_split[0]) == true)
             Rtype_inst(line_split);
         else if(Itypelist.contains(line_split[0]) == true)
             Itype_inst(line_split, i - code.begin());
         else if(Jtypelist.contains(line_split[0]) == true)
-            Jtype_inst(line_split, i - code.begin());
+            Jtype_inst(line_split);
         //
     }
 }
@@ -184,7 +185,7 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
                 int imm_num = inst[i].toInt();
                 if(Itypelist.mid(ADDI, 4).contains(inst[0]) == true
                         && imm_num < 0)
-                    complete_inst(imm, 16, qAbs(imm_num), 2, "1");
+                    complete_inst(imm, 16, (imm_num), 2, "1");
                 else if(Itypelist.mid(ANDI, 3).contains(inst[0]) == true
                         || imm_num >= 0)
                     complete_inst(imm, 16, imm_num, 2);
@@ -212,7 +213,7 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
             {
                 int imm_num = inst[i].toInt();
                 if(imm_num < 0)
-                    complete_inst(imm, 16, qAbs(imm_num), 2, "1");
+                    complete_inst(imm, 16, (imm_num), 2, "1");
                 else
                     complete_inst(imm, 16, imm_num, 2);
                 break;
@@ -271,7 +272,7 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
                     index = inst[i].indexOf("(");
                     num = inst[i].mid(0, index).toInt();
                     if(num < 0)
-                        complete_inst(offset, 16, qAbs(num), 2, "1");
+                        complete_inst(offset, 16, (num), 2, "1");
                     else
                         complete_inst(offset, 16, num, 2);
                     if(inst[i][index + 1] == "$" && inst[i].endsWith(")"))
@@ -322,7 +323,7 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
                     else
                         offset = map[inst[i]] - inst_num - 1;
                     if(offset < 0)
-                        complete_inst(imm, 16, qAbs(offset), 2, "1");
+                        complete_inst(imm, 16, (offset), 2, "1");
                     else
                         complete_inst(imm, 16, offset, 2);
                 }
@@ -337,7 +338,7 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
                     else
                         offset = map[inst[i]] - inst_num - 1;
                     if(offset < 0)
-                        complete_inst(imm, 16, qAbs(offset), 2, "1");
+                        complete_inst(imm, 16, (offset), 2, "1");
                     else
                         complete_inst(imm, 16, offset, 2);
                 }
@@ -365,7 +366,7 @@ void Assemble::Jtype_inst(const QStringList &inst)
     else
         offset = map[inst[1]];
     if(offset < 0)
-        complete_inst(imm, 26, qAbs(offset), 2, "1");
+        complete_inst(imm, 26, (offset), 2, "1");
     else
         complete_inst(imm, 26, offset, 2);
     bi_inst = opcode + imm;
@@ -376,20 +377,7 @@ void Assemble::complete_inst(QString &inst, const int &num, const int &func_num,
                              const QString &fill, const int &isfront)
 {
     inst = QString::number(func_num, base);
-    if(fill == "1")
-    {
-        for(auto i = inst.begin(); i != inst.end(); ++i)
-        {
-            if(*i == "0")
-                inst.replace(i - inst.begin(), 1, '1');
-            else
-                inst.replace(i - inst.begin(), 1, '0');
-        }
-        if(*(inst.end() - 1) == "0")
-            inst.replace(inst.length() - 1, 1, '1');
-        else
-            inst.replace(inst.length() - 1, 1, '0');
-    }
+    inst = inst.right(num);
     while(inst.length() < num)
     {
         if(isfront == 1)

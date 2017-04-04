@@ -23,3 +23,4 @@ HEADERS  += \
     assemble.h
 
 FORMS    += mainwindow.ui
+RC_FILE = icon.rc

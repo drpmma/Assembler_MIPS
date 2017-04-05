@@ -55,8 +55,10 @@ private:
     void setBuildMenu();
     void setHelpMenu();
     QFont setFont();
+    QString get_filename(const QString &path) const;
     void closeEvent(QCloseEvent *event);
     void save_file();
+    Assemble asb;
 };
 
 #endif // MAINWINDOW_H

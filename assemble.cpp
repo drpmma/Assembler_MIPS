@@ -1,6 +1,6 @@
 #include "assemble.h"
 
-Assemble::Assemble():code("")
+Assemble::Assemble(QWidget *parent) : QMainWindow(parent), code(""), bi_output("")
 {
     Reglist = QString("zero, ,v0,v1,a0,a1,a2,a3,"\
                       "t0,t1,t2,t3,t4,t5,t6,t7,"\
@@ -11,6 +11,10 @@ Assemble::Assemble():code("")
     Itypelist = QString("addi,addiu,slti,sltiu,andi,ori,xori,lui,"\
                         "lw,lb,lbu,lh,lhu,sw,sh,sb,beq,bne,blez,bgtz,bltz,bgez").split(",");
     Jtypelist = QString("j,jal").split(",");
+}
+
+Assemble::~Assemble()
+{
 }
 
 void Assemble::Read(const QString &content)
@@ -156,7 +160,9 @@ void Assemble::Rtype_inst(const QStringList &inst)
         break;
     }
     bi_inst = opcode + rs + rt + rd + shamt + func;
-    qDebug() << bi_inst;
+    bi_output.append(bi_inst);
+    complete_inst(bi_inst, 8, bi_inst.toInt(nullptr, 2), 16);
+    coe_output.append(tocoe(bi_inst));
 }
 
 void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
@@ -350,7 +356,9 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
         }
     }
     bi_inst = opcode + rs + rt + imm;
-    qDebug() << bi_inst;
+    bi_output.append(bi_inst);
+    complete_inst(bi_inst, 8, bi_inst.toInt(nullptr, 2), 16);
+    coe_output.append(tocoe(bi_inst));
 }
 
 void Assemble::Jtype_inst(const QStringList &inst)
@@ -370,7 +378,9 @@ void Assemble::Jtype_inst(const QStringList &inst)
     else
         complete_inst(imm, 26, offset, 2);
     bi_inst = opcode + imm;
-    qDebug() << bi_inst;
+    bi_output.append(bi_inst);
+    complete_inst(bi_inst, 8, bi_inst.toInt(nullptr, 2), 16);
+    coe_output.append(tocoe(bi_inst));
 }
 
 void Assemble::complete_inst(QString &inst, const int &num, const int &func_num, const int &base,
@@ -420,4 +430,53 @@ int Assemble::get_inst(const QString &inst, const QString &type) const
         if(*j == inst)
             break;
     return j - begin;
+}
+
+void Assemble::save_bi(const QString &name)
+{
+    QFile file(name + ".bin");
+    if(!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::information(this, tr("ERROR"),tr("can't open file"));
+        return;
+    }
+    QDataStream out(&file);
+    QByteArray out_bi;
+    out_bi.append(bi_output);
+    out << out_bi.toInt(nullptr, 2);
+    file.close();
+}
+
+void Assemble::save_coe(const QString &name)
+{
+    QFile file(name + ".coe");
+    if(!file.open(QIODevice::WriteOnly|QIODevice::Text))
+    {
+        QMessageBox::warning(this,tr("ERROR"),tr("can't open file"));
+        return;
+    }
+    QTextStream out(&file);
+    out << "memory_initialization_radix=16;\n" << "memory_initialization_vector=\n";
+    if(coe_output.right(1) == "\n")
+        coe_output.chop(2);
+    else if(coe_output.right(1) == " ")
+        coe_output.chop(2);
+    coe_output.append(";");
+    out << coe_output;
+    file.close();
+}
+
+QString Assemble::tocoe(const QString &s) const
+{
+    QString temp = s;
+    temp.append(tr(","));
+    if(temp.length() % 119 == 0 && temp.length() != 0)
+    {
+        temp.append(tr("\n"));
+    }
+    else
+    {
+        temp.append(tr(" "));
+    }
+    return temp;
 }

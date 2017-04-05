@@ -205,17 +205,31 @@ QFont MainWindow::setFont()
 
 void MainWindow::assemble_b()
 {
-    Assemble a_bin;
-    a_bin.Read(ui->textEdit->toPlainText());
-    a_bin.inst_handle();
+    asb.Read(ui->textEdit->toPlainText());
+    asb.inst_handle();
+    if(cpath.isEmpty())
+        save_file();
+    asb.save_bi(get_filename(cpath));
 }
 
 void MainWindow::assemble_c()
 {
-
+    if(cpath.isEmpty())
+        save_file();
+    asb.save_coe(get_filename(cpath));
 }
 
 void MainWindow::disassemble()
 {
 
+}
+
+QString MainWindow::get_filename(const QString &path) const
+{
+    QFileInfo fileinfo;
+    QString file_name;
+    fileinfo = QFileInfo(path);
+    file_name = fileinfo.fileName();
+    file_name.replace("." + fileinfo.suffix(), "");
+    return file_name;
 }

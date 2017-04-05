@@ -1,25 +1,36 @@
 #ifndef ASSEMBLE_H
 #define ASSEMBLE_H
 
+#include <QMainWindow>
 #include <QString>
 #include <QStringList>
 #include <QMap>
 #include <QDebug>
+#include <QFile>
+#include <QDataStream>
+#include <QByteArray>
+#include <QMessageBox>
+#include <QTextStream>
 
 
-
-class Assemble
+class Assemble : public QMainWindow
 {
+    Q_OBJECT
 public:
-    Assemble();
+    explicit Assemble(QWidget *parent = 0);
+    ~Assemble();
     void Read(const QString &content);
     void inst_handle();
+    void save_bi(const QString &name);
+    void save_coe(const QString &name);
 private:
     QStringList Reglist;
     QStringList Rtypelist;
     QStringList Itypelist;
     QStringList Jtypelist;
     QStringList code;
+    QString bi_output;
+    QString coe_output;
     QMap <QString, int> map;
     enum Register
     {
@@ -88,6 +99,8 @@ private:
                        const QString &fill = "0", const int &isfront = 1);
     int get_reg(const QString &reg) const;
     int get_inst(const QString &inst, const QString &type) const;
+    QString tocoe(const QString &s) const;
+
 };
 
 #endif // ASSEMBLE_H

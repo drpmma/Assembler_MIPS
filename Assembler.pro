@@ -15,12 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     highlighter.cpp \
-    assemble.cpp
+    assemble.cpp \
+    disassemble.cpp
 
 HEADERS  += \
     mainwindow.h \
     highlighter.h \
-    assemble.h
+    assemble.h \
+    disassemble.h
 
 FORMS    += mainwindow.ui
 RC_FILE = icon.rc

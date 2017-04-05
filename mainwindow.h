@@ -9,6 +9,7 @@
 #include <QCloseEvent>
 #include "highlighter.h"
 #include "assemble.h"
+#include "disassemble.h"
 
 
 namespace Ui {
@@ -56,6 +57,7 @@ private:
     void setHelpMenu();
     QFont setFont();
     QString get_filename(const QString &path) const;
+    QString get_filesuffix(const QString &path) const;
     void closeEvent(QCloseEvent *event);
     void save_file();
     Assemble asb;

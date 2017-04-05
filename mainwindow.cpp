@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setFileMenu();
     setBuildMenu();
     setHelpMenu();
-    setWindowTitle("Assembler");
+    setWindowTitle("Assembler *");
 }
 
 MainWindow::~MainWindow()
@@ -117,6 +117,7 @@ void MainWindow::on_textEdit_textChanged()
 
 void MainWindow::on_actionNew_triggered()
 {
+    cpath = "";
     if(windowTitle() == "Assembler *")
     {
         switch( QMessageBox::information(this,tr("提示"),tr("是否保存更改?"),tr("保存"), tr("不保存"), tr("取消"), 0, 1))
@@ -139,7 +140,6 @@ void MainWindow::on_actionNew_triggered()
 void MainWindow::setEditor()
 {
     ui->setupUi(this);
-
 
     highlighter = new Highlighter(ui->textEdit->document());
 
@@ -189,8 +189,8 @@ void MainWindow::setHelpMenu()
 void MainWindow::about()
 {
     QMessageBox::about(this, tr("About Assembler"),
-                tr("<p> <p><b><font size = '6' face = 'Microsoft JhengHei Light'>Assembler</b></p> " \
-                   "<font size = '4' face = 'Microsoft JhengHei Light'>copy right <a href='https://github.com/drpmma/Assembler_MIPS'>@drpmma</a> github" \
+                tr("<p> <p><b><font size = '4' face = 'Courier New'>Assembler</b></p> " \
+                   "<font size = '4' face = 'Courier New'>copy right <a href='https://github.com/drpmma/Assembler_MIPS'>@drpmma</a> github" \
                    "</p>"));
 }
 
@@ -207,21 +207,50 @@ void MainWindow::assemble_b()
 {
     asb.Read(ui->textEdit->toPlainText());
     asb.inst_handle();
-    if(cpath.isEmpty())
+    if(cpath.isEmpty() || windowTitle() == "Assembler *")
         save_file();
-    asb.save_bi(get_filename(cpath));
+    else
+        asb.save_bi(get_filename(cpath));
 }
 
 void MainWindow::assemble_c()
 {
     if(cpath.isEmpty())
         save_file();
-    asb.save_coe(get_filename(cpath));
+    if(cpath.isEmpty())
+        return;
+    else
+        asb.save_coe(get_filename(cpath));
 }
 
 void MainWindow::disassemble()
 {
+    Disassemble d;
+    QString path = QFileDialog::getOpenFileName(this,tr("Open File"),".",tr("BIN/COE Files(*.bin *.coe)"));
+    if(!path.isEmpty())
+    {
+        QFile file(path);
+        if(get_filesuffix(path) == "coe")
+        {
+            if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
+            {
 
+            }
+            else
+            {
+                QTextStream in(&file);
+                d.Read_coe(in.readAll());
+            }
+        }
+        else if(get_filesuffix(path) == "bin")
+        {
+            if(!file.open(QIODevice::ReadOnly))
+
+            {
+
+            }
+        }
+    }
 }
 
 QString MainWindow::get_filename(const QString &path) const
@@ -232,4 +261,13 @@ QString MainWindow::get_filename(const QString &path) const
     file_name = fileinfo.fileName();
     file_name.replace("." + fileinfo.suffix(), "");
     return file_name;
+}
+
+QString MainWindow::get_filesuffix(const QString &path) const
+{
+    QFileInfo fileinfo;
+    QString file_suffix;
+    fileinfo = QFileInfo(path);
+    file_suffix = fileinfo.suffix();
+    return file_suffix;
 }

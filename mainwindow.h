@@ -60,7 +60,6 @@ private:
     QString get_filesuffix(const QString &path) const;
     void closeEvent(QCloseEvent *event);
     void save_file();
-    Assemble asb;
 };
 
 #endif // MAINWINDOW_H

@@ -2,10 +2,10 @@
 
 Assemble::Assemble(QWidget *parent) : QMainWindow(parent), code(""), bi_output("")
 {
-    Reglist = QString("zero, ,v0,v1,a0,a1,a2,a3,"\
+    Reglist = QString("zero,at,v0,v1,a0,a1,a2,a3,"\
                       "t0,t1,t2,t3,t4,t5,t6,t7,"\
                       "s0,s1,s2,s3,s4,s5,s6,s7,"\
-                      "t8,t9, , ,gp,sp,fp,ra").split(",");
+                      "t8,t9,k0,k1,gp,sp,fp,ra").split(",");
     Rtypelist = QString("add,addu,sub,subu,and,or,xor,nor,"\
                         "sll,srl,sra,slt,sltu,jr,jalr").split(",");
     Itypelist = QString("addi,addiu,slti,sltiu,andi,ori,xori,lui,"\
@@ -160,8 +160,8 @@ void Assemble::Rtype_inst(const QStringList &inst)
         break;
     }
     bi_inst = opcode + rs + rt + rd + shamt + func;
-    bi_output.append(bi_inst);
     complete_inst(bi_inst, 8, bi_inst.toInt(nullptr, 2), 16);
+    bi_output.append(bi_inst);
     coe_output.append(tocoe(bi_inst));
 }
 
@@ -356,8 +356,8 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
         }
     }
     bi_inst = opcode + rs + rt + imm;
-    bi_output.append(bi_inst);
     complete_inst(bi_inst, 8, bi_inst.toInt(nullptr, 2), 16);
+    bi_output.append(bi_inst);
     coe_output.append(tocoe(bi_inst));
 }
 
@@ -378,8 +378,8 @@ void Assemble::Jtype_inst(const QStringList &inst)
     else
         complete_inst(imm, 26, offset, 2);
     bi_inst = opcode + imm;
-    bi_output.append(bi_inst);
     complete_inst(bi_inst, 8, bi_inst.toInt(nullptr, 2), 16);
+    bi_output.append(bi_inst);
     coe_output.append(tocoe(bi_inst));
 }
 
@@ -440,10 +440,8 @@ void Assemble::save_bi(const QString &name)
         QMessageBox::information(this, tr("ERROR"),tr("can't open file"));
         return;
     }
-    QDataStream out(&file);
-    QByteArray out_bi;
-    out_bi.append(bi_output);
-    out << out_bi.toInt(nullptr, 2);
+    QByteArray array = QByteArray::fromHex(bi_output.toLatin1());
+    file.write(array);
     file.close();
 }
 
@@ -479,4 +477,9 @@ QString Assemble::tocoe(const QString &s) const
         temp.append(tr(" "));
     }
     return temp;
+}
+
+QStringList Assemble::get_reglist() const
+{
+    return Reglist;
 }

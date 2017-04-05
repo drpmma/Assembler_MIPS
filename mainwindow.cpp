@@ -205,6 +205,7 @@ QFont MainWindow::setFont()
 
 void MainWindow::assemble_b()
 {
+    Assemble asb;
     asb.Read(ui->textEdit->toPlainText());
     asb.inst_handle();
     if(cpath.isEmpty() || windowTitle() == "Assembler *")
@@ -215,12 +216,13 @@ void MainWindow::assemble_b()
 
 void MainWindow::assemble_c()
 {
-    if(cpath.isEmpty())
+    Assemble asbc;
+    asbc.Read(ui->textEdit->toPlainText());
+    asbc.inst_handle();
+    if(cpath.isEmpty() || windowTitle() == "Assembler *")
         save_file();
-    if(cpath.isEmpty())
-        return;
     else
-        asb.save_coe(get_filename(cpath));
+        asbc.save_coe(get_filename(cpath));
 }
 
 void MainWindow::disassemble()

@@ -23,6 +23,8 @@ public:
     void inst_handle();
     void save_bi(const QString &name);
     void save_coe(const QString &name);
+    QStringList get_reglist() const;
+
 private:
     QStringList Reglist;
     QStringList Rtypelist;
@@ -35,12 +37,14 @@ private:
     enum Register
     {
         zero,
-        v0 = 2, v1,
+        at,
+        v0, v1,
         a0, a1, a2, a3,
         t0, t1, t2, t3, t4, t5, t6, t7,
         s0, s1, s2, s3, s4, s5, s6, s7,
         t8, t9,
-        gp = 28, sp, fp, ra
+        k0, k1,
+        gp, sp, fp, ra
     };
     enum Rtype
     {

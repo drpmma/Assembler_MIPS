@@ -245,7 +245,8 @@ void MainWindow::disassemble()
         {
             if(file.open(QIODevice::ReadOnly))
             {
-
+                d.Read_bin(file.readAll().toHex());
+                ui->textEdit->setText(d.Write());
             }
         }
     }

@@ -45,7 +45,6 @@ void Assemble::inst_handle()
     for(auto i = code.begin(); i != code.end(); ++i)
     {
         QStringList line_split = i->split(QRegExp("\\s+|\\s*[,]\\s*|\\s*[;]"));
-        qDebug() << line_split;
         if(Rtypelist.contains(line_split[0]) == true)
             Rtype_inst(line_split);
         else if(Itypelist.contains(line_split[0]) == true)
@@ -360,7 +359,6 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
     }
     bi_inst = opcode + rs + rt + imm;
     complete_inst(bi_inst, 8, bi_inst.toLongLong(nullptr, 2), 16);
-    qDebug() << "bi_inst_hex" << bi_inst;
     bi_output.append(bi_inst);
     coe_output.append(tocoe(bi_inst));
 }

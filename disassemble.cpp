@@ -23,19 +23,30 @@ void Disassemble::Read_coe(const QString &content)
 
     if(vector[0] == coe_1 && vector[1] == coe_2)
     {
+        vector.removeAt(0);
+        vector.removeAt(0);
         vector_handle(num);
     }
     else
     {
         Error(tr("coe file is wrong"));
     }
+}
 
+void Disassemble::Read_bin(const QString &content)
+{
+    int count = 0;
+    for(auto i = content.begin(); i != content.end(); i += 8)
+    {
+        if(count % 8 == 0)
+            vector.append(content.mid(count, 8));
+        count += 8;
+    }
+    vector_handle(16);
 }
 
 void Disassemble::vector_handle(const int &num)
 {
-    vector.removeAt(0);
-    vector.removeAt(0);
     for(auto i = vector.begin(); i != vector.end(); ++i)
     {
         long long int func_num;
@@ -161,7 +172,6 @@ void Disassemble::Itype(const QString &inst)
         rs_a.push_front('(');
         rs_a.push_back(')');
         address = imm_a + rs_a;
-        qDebug() << rs_a;
     }
     else if(func_a == "lui")
     {
@@ -171,7 +181,6 @@ void Disassemble::Itype(const QString &inst)
     else
     {
         rs_a.push_back(tr(","));
-        rs_a.push_front(tr("$"));
         address = rs_a + imm_a;
     }
     func_a.append(" ");

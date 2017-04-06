@@ -14,6 +14,7 @@ class Disassemble : public QMainWindow
 public:
     explicit Disassemble(QWidget *parent = 0);
     void Read_coe(const QString &content);
+    void Read_bin(const QString &content);
     void vector_handle(const int &num);
     const QString Write();
 

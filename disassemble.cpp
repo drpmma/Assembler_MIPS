@@ -129,6 +129,7 @@ void Disassemble::Itype(const QString &inst)
     QString imm = inst.mid(16);
     QString rs_a = "";
     QString rt_a = "";
+    QString address;
     QString imm_a;
     int func_num = opcode.toInt(nullptr, 2);
     if(imm.left(1) == "0")
@@ -153,11 +154,24 @@ void Disassemble::Itype(const QString &inst)
         rt_a = get_reg(rt) + tr(",");
         rt_a.push_front(tr("$"));
     }
-    func_a.append(" ");
-
-    rs_a = get_reg(rs) + tr(",");
+    rs_a = get_reg(rs);
     rs_a.push_front(tr("$"));
-    QString asb_code = func_a  + rs_a + rt_a + imm_a + ";\n";
+    if(func_a == "lw" || func_a == "lb" || func_a == "lbu" || func_a == "lh" || func_a == "lhu"
+       || func_a == "sw" || func_a == "sb" || func_a == "sh")
+    {
+        rs_a.push_front('(');
+        rs_a.push_back(')');
+        address = imm_a + rs_a;
+        qDebug() << rs_a;
+    }
+    else
+    {
+        rs_a.push_back(tr(","));
+        rs_a.push_front(tr("$"));
+        address = rs_a + imm_a;
+    }
+    func_a.append(" ");
+    QString asb_code = func_a  + rt_a + address + ";\n";
     instrucion.append(asb_code);
 }
 

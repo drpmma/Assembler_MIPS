@@ -15,9 +15,11 @@ public:
     explicit Disassemble(QWidget *parent = 0);
     void Read_coe(const QString &content);
     void vector_handle(const int &num);
+    const QString Write();
+
 private:
     QStringList vector;
-    QString inst;
+    QString instrucion;
     void Error(const QString &err_mess);
     void complete_inst(QString &inst, const int &num,
                        const int &func_num, const int &base);
@@ -25,7 +27,8 @@ private:
     void Itype(const QString &inst);
     void Jtype(const QString &inst);
     QString get_reg(const QString &reg);
-    QString get_func(const int &func_num);
+    QString get_func(const int &func_num, const QString &type);
+
 signals:
 
 public slots:

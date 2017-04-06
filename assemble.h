@@ -24,6 +24,9 @@ public:
     void save_bi(const QString &name);
     void save_coe(const QString &name);
     QStringList get_reglist() const;
+    QStringList get_rtype() const;
+    QStringList get_itype() const;
+    QStringList get_jtype() const;
 
 private:
     QStringList Reglist;

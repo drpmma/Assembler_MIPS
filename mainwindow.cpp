@@ -234,20 +234,16 @@ void MainWindow::disassemble()
         QFile file(path);
         if(get_filesuffix(path) == "coe")
         {
-            if(!file.open(QIODevice::ReadOnly|QIODevice::Text))
-            {
-
-            }
-            else
+            if(file.open(QIODevice::ReadOnly|QIODevice::Text))
             {
                 QTextStream in(&file);
                 d.Read_coe(in.readAll());
+                ui->textEdit->setText(d.Write());
             }
         }
         else if(get_filesuffix(path) == "bin")
         {
-            if(!file.open(QIODevice::ReadOnly))
-
+            if(file.open(QIODevice::ReadOnly))
             {
 
             }

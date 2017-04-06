@@ -160,7 +160,7 @@ void Assemble::Rtype_inst(const QStringList &inst)
         break;
     }
     bi_inst = opcode + rs + rt + rd + shamt + func;
-    complete_inst(bi_inst, 8, bi_inst.toInt(nullptr, 2), 16);
+    complete_inst(bi_inst, 8, bi_inst.toLongLong(nullptr, 2), 16);
     bi_output.append(bi_inst);
     coe_output.append(tocoe(bi_inst));
 }
@@ -322,7 +322,10 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
                     complete_inst(rt, 5, reg, 2);
                 else
                 {
-                    complete_inst(rt, 5, 0, 2);
+                    if(inst[0] == "bgez")
+                        complete_inst(rt, 5, 1, 2);
+                    else
+                        complete_inst(rt, 5, 0, 2);
                     int offset;
                     if(inst[i].contains(QRegExp("^[1-9]?[0-9]*$")) == true)
                         offset = inst[i].toInt();
@@ -356,7 +359,8 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
         }
     }
     bi_inst = opcode + rs + rt + imm;
-    complete_inst(bi_inst, 8, bi_inst.toInt(nullptr, 2), 16);
+    complete_inst(bi_inst, 8, bi_inst.toLongLong(nullptr, 2), 16);
+    qDebug() << "bi_inst_hex" << bi_inst;
     bi_output.append(bi_inst);
     coe_output.append(tocoe(bi_inst));
 }
@@ -374,11 +378,11 @@ void Assemble::Jtype_inst(const QStringList &inst)
     else
         offset = map[inst[1]];
     if(offset < 0)
-        complete_inst(imm, 26, (offset), 2, "1");
+        complete_inst(imm, 26, offset, 2, "1");
     else
         complete_inst(imm, 26, offset, 2);
     bi_inst = opcode + imm;
-    complete_inst(bi_inst, 8, bi_inst.toInt(nullptr, 2), 16);
+    complete_inst(bi_inst, 8, bi_inst.toLongLong(nullptr, 2), 16);
     bi_output.append(bi_inst);
     coe_output.append(tocoe(bi_inst));
 }
@@ -482,4 +486,19 @@ QString Assemble::tocoe(const QString &s) const
 QStringList Assemble::get_reglist() const
 {
     return Reglist;
+}
+
+QStringList Assemble::get_rtype() const
+{
+    return Rtypelist;
+}
+
+QStringList Assemble::get_itype() const
+{
+    return Itypelist;
+}
+
+QStringList Assemble::get_jtype() const
+{
+    return Jtypelist;
 }

@@ -57,15 +57,13 @@ void Disassemble::vector_handle(const int &num)
 
         QString opcode;
         opcode = i->mid(0, 6);
-        if(opcode == tr("000000"))
+        int num = opcode.toInt(nullptr, 2);
+        if(num == 0)
             Rtype(*i);
-        else if((opcode >= tr("000100") && opcode <= tr("001011"))
-                || opcode == tr("100000") || opcode == tr("100001")
-                || opcode == tr("100011") || opcode == tr("100100")
-                || opcode == tr("100101") || opcode == tr("101000")
-                || opcode == tr("101001") || opcode == tr("101011"))
+        else if((num >= 4 && num <= 15) || num == 1 || (num >= 32 && num <= 33)
+                || (num >= 35 && num <= 37) || (num >= 40 && num <= 41) || num == 43)
             Itype(*i);
-        else if(opcode == tr("000010") || opcode == tr("000011"))
+        else if(num == 2 || num == 3)
             Jtype(*i);
     }
 }
@@ -154,6 +152,7 @@ void Disassemble::Itype(const QString &inst)
         rt_a = get_reg(rt) + tr(",");
         rt_a.push_front(tr("$"));
     }
+
     rs_a = get_reg(rs);
     rs_a.push_front(tr("$"));
     if(func_a == "lw" || func_a == "lb" || func_a == "lbu" || func_a == "lh" || func_a == "lhu"
@@ -163,6 +162,11 @@ void Disassemble::Itype(const QString &inst)
         rs_a.push_back(')');
         address = imm_a + rs_a;
         qDebug() << rs_a;
+    }
+    else if(func_a == "lui")
+    {
+        rs_a = tr("");
+        address = imm_a;
     }
     else
     {

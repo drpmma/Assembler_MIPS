@@ -7,6 +7,7 @@
 #include <QTextEdit>
 #include <QTextStream>
 #include <QCloseEvent>
+#include <QDesktopServices>
 #include "highlighter.h"
 #include "assemble.h"
 #include "disassemble.h"
@@ -33,6 +34,8 @@ private slots:
     void assemble_c();
 
     void disassemble();
+
+    void open_dir();
 
     void on_actionExit_triggered();
 

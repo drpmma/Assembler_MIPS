@@ -157,8 +157,8 @@ void Disassemble::Itype(const QString &inst)
         else
             Error("No such operation");
     }
-    if(func_a != "bgtz" || func_a != "blez"
-       || func_a != "bltz" || func_a != "bgez")
+    if(func_a != "bgtz" && func_a != "blez"
+       && func_a != "bltz" && func_a != "bgez")
     {
         rt_a = get_reg(rt) + tr(",");
         rt_a.push_front(tr("$"));

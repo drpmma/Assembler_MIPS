@@ -46,8 +46,8 @@
       </property>
       <property name="font">
        <font>
-        <family>Courier New</family>
-        <pointsize>12</pointsize>
+        <family>Source Sans Pro Light</family>
+        <pointsize>14</pointsize>
        </font>
       </property>
      </widget>

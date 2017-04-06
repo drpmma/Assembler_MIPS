@@ -173,6 +173,8 @@ void MainWindow::setBuildMenu()
     buildMenu->addAction(tr("Assemble (Binary file)"), this, SLOT(assemble_b()), tr("F5"));
     buildMenu->addAction(tr("Assemble (COE file)"), this, SLOT(assemble_c()), tr("F6"));
     buildMenu->addAction(tr("Disassemble"), this, SLOT(disassemble()), tr("F10"));
+    buildMenu->addSeparator();
+    buildMenu->addAction(tr("Output directory"), this, SLOT(open_dir()), tr("F12"));
 }
 
 void MainWindow::setHelpMenu()
@@ -250,6 +252,11 @@ void MainWindow::disassemble()
             }
         }
     }
+}
+
+void MainWindow::open_dir()
+{
+    QDesktopServices::openUrl(QApplication::applicationDirPath());
 }
 
 QString MainWindow::get_filename(const QString &path) const

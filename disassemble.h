@@ -6,7 +6,8 @@
 #include <QMessageBox>
 #include <QStringList>
 #include <QDebug>
-#include <assemble.h>
+#include <QMap>
+#include "assemble.h"
 
 class Disassemble : public QMainWindow
 {
@@ -20,15 +21,19 @@ public:
 
 private:
     QStringList vector;
-    QString instrucion;
+    QStringList instruction;
+    QMap <int, QString> lb;
     void Error(const QString &err_mess);
     void complete_inst(QString &inst, const int &num,
                        const int &func_num, const int &base);
     void Rtype(const QString &inst);
     void Itype(const QString &inst);
     void Jtype(const QString &inst);
+    void deal_label();
     QString get_reg(const QString &reg);
     QString get_func(const int &func_num, const QString &type);
+    int lb_num;
+    int inst_num;
 
 signals:
 

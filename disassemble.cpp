@@ -2,6 +2,8 @@
 
 Disassemble::Disassemble(QWidget *parent) : QMainWindow(parent)
 {
+    inst_num = 0;
+    lb_num = 0;
 }
 
 void Disassemble::Read_coe(const QString &content)
@@ -77,6 +79,7 @@ void Disassemble::vector_handle(const int &num)
         else if(num == 2 || num == 3)
             Jtype(*i);
     }
+    deal_label();
 }
 
 void Disassemble::Rtype(const QString &inst)
@@ -127,7 +130,8 @@ void Disassemble::Rtype(const QString &inst)
         Error("No such operation");
     func_a.append(tr(" "));
     asb_code = func_a + rd_a + rs_a + rt_a;
-    instrucion.append(asb_code);
+    instruction.append(asb_code);
+    ++inst_num;
 }
 
 void Disassemble::Itype(const QString &inst)
@@ -140,11 +144,13 @@ void Disassemble::Itype(const QString &inst)
     QString rt_a = "";
     QString address;
     QString imm_a;
+    int imm_num;
     int func_num = opcode.toInt(nullptr, 2);
     if(imm.left(1) == "0")
-        imm_a = QString::number(imm.toInt(nullptr, 2));
+        imm_num = imm.toInt(nullptr, 2);
     else
-        imm_a = QString::number(imm.toInt(nullptr, 2) - 65536);
+        imm_num = imm.toInt(nullptr, 2) - 65536;
+    imm_a = QString::number(imm_num);
     QString func_a;
     if(opcode != 1)
         func_a= get_func(func_num, "I");
@@ -178,6 +184,16 @@ void Disassemble::Itype(const QString &inst)
         rs_a = tr("");
         address = imm_a;
     }
+    else if(func_a[0] == 'b')
+    {
+        int index = imm_num;
+        QString lb_count = QString::number(lb_num);
+        address = "label" + lb_count;
+        ++lb_num;
+        lb.insert(inst_num + index + 1, address);
+        rs_a.push_back(tr(","));
+        address = rs_a + imm_a;
+    }
     else
     {
         rs_a.push_back(tr(","));
@@ -185,7 +201,8 @@ void Disassemble::Itype(const QString &inst)
     }
     func_a.append(" ");
     QString asb_code = func_a  + rt_a + address + ";\n";
-    instrucion.append(asb_code);
+    instruction.append(asb_code);
+    ++inst_num;
 }
 
 void Disassemble::Jtype(const QString &inst)
@@ -195,13 +212,21 @@ void Disassemble::Jtype(const QString &inst)
     QString tgt_a;
     int func_num = opcode.toInt(nullptr, 2);
     QString func_a = get_func(func_num, "J");
+    int tgt_num;
     if(target.left(1) == "0")
-        tgt_a = QString::number(target.toInt(nullptr, 2));
+        tgt_num = target.toInt(nullptr, 2);
     else
-        tgt_a = QString::number(target.toInt(nullptr, 2)- 65536);
+        tgt_num = target.toInt(nullptr, 2) - 65536;
     func_a.append(tr(" "));
+
+    int index = tgt_num;
+    QString lb_count = QString::number(lb_num);
+    tgt_a = "label" + lb_count;
+    ++lb_num;
+    lb.insert(index, tgt_a);
     QString asb_code = func_a + tgt_a + tr(";\n");
-    instrucion.append(asb_code);
+    instruction.append(asb_code);
+    ++inst_num;
 }
 
 
@@ -295,5 +320,19 @@ QString Disassemble::get_func(const int &func_num, const QString &type)
 
 const QString Disassemble::Write()
 {
-    return instrucion;
+    QString temp = instruction.join("");
+    temp.replace(":", ":\n");
+    return temp;
+}
+
+void Disassemble::deal_label()
+{
+    for(auto i = instruction.begin(); i != instruction.end(); ++i)
+    {
+        int index = i - instruction.begin();
+        if(lb.contains(index))
+        {
+            (*i).insert(0, lb[index] + ":");
+        }
+    }
 }

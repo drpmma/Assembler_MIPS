@@ -106,7 +106,7 @@ private:
                        const QString &fill = "0", const int &isfront = 1);
     int get_reg(const QString &reg) const;
     int get_inst(const QString &inst, const QString &type) const;
-    QString tocoe(const QString &s) const;
+    void tocoe(QString &s) const;
 
 };
 

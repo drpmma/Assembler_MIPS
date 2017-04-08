@@ -161,7 +161,8 @@ void Assemble::Rtype_inst(const QStringList &inst)
     bi_inst = opcode + rs + rt + rd + shamt + func;
     complete_inst(bi_inst, 8, bi_inst.toLongLong(nullptr, 2), 16);
     bi_output.append(bi_inst);
-    coe_output.append(tocoe(bi_inst));
+    coe_output.append(bi_inst);
+    tocoe(coe_output);
 }
 
 void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
@@ -360,7 +361,8 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
     bi_inst = opcode + rs + rt + imm;
     complete_inst(bi_inst, 8, bi_inst.toLongLong(nullptr, 2), 16);
     bi_output.append(bi_inst);
-    coe_output.append(tocoe(bi_inst));
+    coe_output.append(bi_inst);
+    tocoe(coe_output);
 }
 
 void Assemble::Jtype_inst(const QStringList &inst)
@@ -382,7 +384,8 @@ void Assemble::Jtype_inst(const QStringList &inst)
     bi_inst = opcode + imm;
     complete_inst(bi_inst, 8, bi_inst.toLongLong(nullptr, 2), 16);
     bi_output.append(bi_inst);
-    coe_output.append(tocoe(bi_inst));
+    coe_output.append(bi_inst);
+    tocoe(coe_output);
 }
 
 void Assemble::complete_inst(QString &inst, const int &num, const int &func_num, const int &base,
@@ -466,19 +469,17 @@ void Assemble::save_coe(const QString &name)
     file.close();
 }
 
-QString Assemble::tocoe(const QString &s) const
+void Assemble::tocoe(QString &s) const
 {
-    QString temp = s;
-    temp.append(tr(","));
-    if(temp.length() % 119 == 0 && temp.length() != 0)
+    s.append(tr(","));
+    if((s.length() + 1) % 80 == 0)
     {
-        temp.append(tr("\n"));
+        s.append(tr("\n"));
     }
     else
     {
-        temp.append(tr(" "));
+        s.append(tr(" "));
     }
-    return temp;
 }
 
 QStringList Assemble::get_reglist() const

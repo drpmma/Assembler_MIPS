@@ -24,6 +24,11 @@ void Assemble::Read(const QString &content)
     code = temp.split("\n");
     for(auto i = code.begin(); i != code.end(); ++i)
     {
+        if(i->isEmpty())
+            code.removeAt(i - code.begin());
+    }
+    for(auto i = code.begin(); i != code.end(); ++i)
+    {
         *i = i->trimmed();
         if(!(i->isEmpty()))
         {
@@ -33,6 +38,7 @@ void Assemble::Read(const QString &content)
                 QString lb = i->left(i->indexOf(":"));
                 map.insert(lb, i - code.begin());
                 code.removeAt(i - code.begin());
+                --i;
             }
         }
         else
@@ -160,6 +166,7 @@ void Assemble::Rtype_inst(const QStringList &inst)
     }
     bi_inst = opcode + rs + rt + rd + shamt + func;
     complete_inst(bi_inst, 8, bi_inst.toLongLong(nullptr, 2), 16);
+    bi_inst = bi_inst.toUpper();
     bi_output.append(bi_inst);
     coe_output.append(bi_inst);
     tocoe(coe_output);
@@ -360,6 +367,7 @@ void Assemble::Itype_inst(const QStringList &inst, const int &inst_num)
     }
     bi_inst = opcode + rs + rt + imm;
     complete_inst(bi_inst, 8, bi_inst.toLongLong(nullptr, 2), 16);
+    bi_inst = bi_inst.toUpper();
     bi_output.append(bi_inst);
     coe_output.append(bi_inst);
     tocoe(coe_output);
@@ -383,6 +391,7 @@ void Assemble::Jtype_inst(const QStringList &inst)
         complete_inst(imm, 26, offset, 2);
     bi_inst = opcode + imm;
     complete_inst(bi_inst, 8, bi_inst.toLongLong(nullptr, 2), 16);
+    bi_inst = bi_inst.toUpper();
     bi_output.append(bi_inst);
     coe_output.append(bi_inst);
     tocoe(coe_output);

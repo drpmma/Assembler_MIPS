@@ -152,8 +152,8 @@ void Disassemble::Itype(const QString &inst)
         imm_num = imm.toInt(nullptr, 2) - 65536;
     imm_a = QString::number(imm_num);
     QString func_a;
-    if(opcode != 1)
-        func_a= get_func(func_num, "I");
+    if(opcode.toInt(nullptr, 2) != 1)
+        func_a = get_func(func_num, "I");
     else
     {
         if(rt.toInt(nullptr, 2) == 0)
@@ -187,10 +187,15 @@ void Disassemble::Itype(const QString &inst)
     else if(func_a[0] == 'b')
     {
         int index = imm_num;
-        QString lb_count = QString::number(lb_num);
-        address = "label" + lb_count;
-        ++lb_num;
-        lb.insert(inst_num + index + 1, address);
+        if(lb.contains(inst_num + index + 1) == true)
+            imm_a = lb[inst_num + index + 1];
+        else
+        {
+            QString lb_count = QString::number(lb_num);
+            imm_a = "label" + lb_count;
+            ++lb_num;
+            lb.insert(inst_num + index + 1, imm_a);
+        }
         rs_a.push_back(tr(","));
         address = rs_a + imm_a;
     }
@@ -200,7 +205,11 @@ void Disassemble::Itype(const QString &inst)
         address = rs_a + imm_a;
     }
     func_a.append(" ");
-    QString asb_code = func_a  + rt_a + address + ";\n";
+    QString asb_code;
+    if(func_a == "bne " || func_a == "beq ")
+        asb_code = func_a + rs_a + rt_a + imm_a + ";\n";
+    else
+        asb_code = func_a  + rt_a + address + ";\n";
     instruction.append(asb_code);
     ++inst_num;
 }
@@ -220,10 +229,15 @@ void Disassemble::Jtype(const QString &inst)
     func_a.append(tr(" "));
 
     int index = tgt_num;
-    QString lb_count = QString::number(lb_num);
-    tgt_a = "label" + lb_count;
-    ++lb_num;
-    lb.insert(index, tgt_a);
+    if(lb.contains(index))
+        tgt_a = lb[index];
+    else
+    {
+        QString lb_count = QString::number(lb_num);
+        tgt_a = "label" + lb_count;
+        ++lb_num;
+        lb.insert(index, tgt_a);
+    }
     QString asb_code = func_a + tgt_a + tr(";\n");
     instruction.append(asb_code);
     ++inst_num;

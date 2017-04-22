@@ -11,7 +11,14 @@
 > Disassemble BIN or COE files back to assemble codes
 
 
+## Interface
+![](res/interface.jpg)
+## MENU
+![](res/menufile.jpg)
 
+![](res/menubuild.jpg)
+
+![](res/menuhelp.jpg)
 ## EXAMPLE
 
 ### Basic_single_cycle.asm
